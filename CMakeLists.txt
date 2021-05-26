@@ -3,4 +3,5 @@ project(TCPL C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(TCPL main.c)
+add_executable(chapter01 ch01.c)
+add_executable(chapter02 ch02.c)
