@@ -160,10 +160,6 @@ void squeeze_(char s[], int c) {
 }
 
 
-//Write the function any(s1,s2), which returns the first location in a string s1
-//where any character from the string s2 occurs, or -1 if s1 contains no characters from s2.
-//(The standard library function strpbrk does the same job but returns a pointer to the
-//location.)
 int any(const char s1[], const char s2[]) {
   int i;
   for (i = 0; s1[i] != '\0'; ++i) {
@@ -175,8 +171,6 @@ int any(const char s1[], const char s2[]) {
 }
 
 
-//Exercise 2-6. Write a function setbits(x,p,n,y) that returns x with the n bits that begin at
-//position p set to the rightmost n bits of y, leaving the other bits unchanged.
 unsigned setbits(unsigned x, unsigned p, unsigned n, unsigned y) {
   unsigned mask = (1 << n) - 1;
   return x & (mask << (p + 1 - n)) | ((y & mask) << (p + 1 - n));
@@ -185,6 +179,11 @@ unsigned setbits(unsigned x, unsigned p, unsigned n, unsigned y) {
 
 //Exercise 2-7. Write a function invert(x,p,n) that returns x with the n bits that begin at
 //position p inverted (i.e., 1 changed into 0 and vice versa), leaving the others unchanged.
+unsigned invert(unsigned x,  unsigned p, unsigned n) {
+  
+}
+
+
 //Exercise 2-8. Write a function rightrot(x,n) that returns the value of the integer x rotated
 //to the right by n positions
 
