@@ -300,14 +300,14 @@ void word_count() {
 
 /* Exercise 1-12. Write a program that prints its input one word per line. */
 void print_one_word_per_line() {
-  const int IN  = 1;
+  const int IN = 1;
   const int OUT = 0;
 
   int c;
-  int state = IN;
+  int state = OUT;
 
   while ((c = getchar()) != EOF) {
-    if (c == ' ' || c == '\t' || c == '\n') {
+    if (c == ' ' || c == '\t') {
       state = OUT;
     } else if (state == OUT) {
       state = IN;
@@ -317,12 +317,117 @@ void print_one_word_per_line() {
   }
 }
 
+
 /* Exercise 1-13. Write a program to print a histogram of the lengths of words in its input.
  * It is easy to draw the histogram with the bars horizontal;
  * a vertical orientation is more challenging.
  */
+void word_len_histogram() {
+  const int IN = 1;
+  const int OUT = 0;
+  const int MAX_LEN = 10;
 
+  int c;
+  int state = OUT;
+  int cnt[MAX_LEN + 1];
+  for (int i = 0; i <= MAX_LEN; ++i) { cnt[i] = 0; }
+  int len = 0;
+
+  while ((c = getchar()) != EOF) {
+    if (c == ' ' || c == '\t' || c == '\n') {
+      if (state == IN) {
+        state = OUT;
+        if (len != 0) {
+          ++cnt[((len - 1) < MAX_LEN) ? (len - 1) : MAX_LEN];
+          len = 0;
+        }
+      }
+    } else {
+      state = IN;
+      ++len;
+    }
+  }
+
+  printf("[Word length distribution]\n");
+  for (int i = 0; i <= MAX_LEN; ++i) {
+    if (i == MAX_LEN) {
+      printf(">%d\t", MAX_LEN);
+    } else {
+      printf("%d\t: ", i + 1);
+    }
+    while (cnt[i]--) {
+      printf("#");
+    }
+    printf("\n");
+  }
+}
+
+
+// TODO
 /* Exercise 1-14. Write a program to print a histogram of the frequencies of different characters in its input. */
+void char_histogram() {
+  printf("TODO\n");
+}
+
+
+/* Exercise 1.15. Rewrite the temperature conversion program of Section 1.2 to use a function for conversion. */
+// All ready done.
+
+
+/* Exercise 1-16. Revise the main routine of the longest-line program so it will correctly print
+ * the length of arbitrary long input lines, and as much as possible of the text.
+ */
+
+/* getline: read a line into s, return length. */
+int getline(char s[], int lim) {
+  int c, i;
+
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) { s[i] = c; }
+  if (c == '\n') {
+    s[i] = c;
+    ++i;
+  }
+  s[i] = '\n';
+  return i;
+}
+
+
+int longest_input_line() {
+  const int MAX_LINE = 1000;
+
+  int len;
+  int max;
+  char line[MAX_LINE];
+  char longest[MAX_LINE];
+
+  max = 0;
+  while ((len = getline(line, MAX_LINE)) > 0) {
+    if (len == MAX_LINE - 1 && line[MAX_LINE - 2] != '\n') {
+      int len_rest;
+      while ((len_rest = getline(line, MAX_LINE)) > 0) { len += len_rest; printf("len_rest=%d\n", len_rest); }
+    }
+    if (len > max) {
+      max = len;
+      for (int i = 0; (line[i] = longest[i]) != '\0'; ++i) {}
+    }
+    printf("max=%d\n", max);
+  }
+  if (max > 0) { printf("%s", longest); }
+  return max;
+}
+
+
+/* Exercise 1-17. Write a program to print all input lines that are longer than 80 characters. */
+
+
+/* Exercise 1-18. Write a program to remove trailing blanks and tabs from each line of input,
+ * and to delete entirely blank lines.
+ */
+
+
+/* Exercise 1-19. Write a function reverse(s) that reverses the character string s.
+ * Use it to write a program that reverses its input a line at a time.
+ */
 
 
 /* Exercise 1-20. Write a program detab that replaces tabs in the input with the proper number of blanks
@@ -423,7 +528,10 @@ int main() {
 //  replace_white_space();
 
 //  word_count();
-  print_one_word_per_line();
+//  print_one_word_per_line();
+//  word_len_histogram();
+//  char_histogram();
+  printf("%d", longest_input_line());
 //  file_io_test();
 //  print_EOF();
 
