@@ -404,7 +404,10 @@ int longest_input_line() {
   while ((len = getline(line, MAX_LINE)) > 0) {
     if (len == MAX_LINE - 1 && line[MAX_LINE - 2] != '\n') {
       int len_rest;
-      while ((len_rest = getline(line, MAX_LINE)) > 0) { len += len_rest; printf("len_rest=%d\n", len_rest); }
+      while ((len_rest = getline(line, MAX_LINE)) > 0) {
+        len += len_rest;
+        printf("len_rest=%d\n", len_rest);
+      }
     }
     if (len > max) {
       max = len;
@@ -418,16 +421,99 @@ int longest_input_line() {
 
 
 /* Exercise 1-17. Write a program to print all input lines that are longer than 80 characters. */
+// TODO: revise when necessary
+// Adopted from https://codereview.stackexchange.com/a/79076
+void print_line_longer_than_threshold() {
+  const int MIN_LEN = 80;
+
+  int c;
+  int i = 0;
+  char line[MIN_LEN + 1];
+
+  while ((c = getchar()) != EOF) {
+    if (i < MIN_LEN) {
+      // state 1: buffer not full
+      if (c == '\n') { i = 0; }
+      else {
+        line[i++] = c;
+        if (i == MIN_LEN) {
+          line[i] = '\0';
+          printf("%s", line);
+        }
+      }
+    } else {
+      putchar(c);
+      if (c == '\n') { i = 0; }
+    }
+  }
+}
 
 
 /* Exercise 1-18. Write a program to remove trailing blanks and tabs from each line of input,
  * and to delete entirely blank lines.
  */
+// TODO: handle buffer overflow
+// Adopted from https://stackoverflow.com/a/55028476/14094521
+void remove_trailing_whitespace() {
+  const int MAX_LEN = 1000;
+  const int IN_LINE = 1;
+  const int OUT_LINE = 0;
+
+  int c;
+  int statues = OUT_LINE;
+  char line[MAX_LEN];
+  int i = 0;
+
+  while ((c = getchar()) != EOF) {
+    if (c != '\n') {
+      line[i++] = c;
+    } else {
+      if (i == 0) { continue; }
+      while (line[--i] == ' ' || line[i] == '\t') {}
+      line[++i] = '\n';
+      line[++i] = '\0';
+      printf("%s", line);
+      i = 0;
+    }
+  }
+}
 
 
 /* Exercise 1-19. Write a function reverse(s) that reverses the character string s.
  * Use it to write a program that reverses its input a line at a time.
  */
+void reverse_line(char s[]) {
+  int n = 0;
+  while (s[n] != '\n' && s[n] != '\0') { ++n; }
+//  printf("[n=%d]", n);
+  for (int i = 0; i < n / 2; ++i) {
+    char tmp = s[i];
+    s[i] = s[n - i - 1];
+    s[n - i - 1] = tmp;
+
+//    printf("swap %d and %d", i, n - i - 1);
+  }
+}
+
+
+void reverse() {
+  const int MAX_LEN = 1000;
+
+  int c;
+  char line[MAX_LEN];
+  int i = 0;
+
+  while ((c = getchar()) != EOF) {
+    line[i++] = c;
+
+    if (c == '\n') {
+      line[i] = '\0';
+      reverse_line(line);
+      printf("%s", line);
+      i = 0;
+    }
+  }
+}
 
 
 /* Exercise 1-20. Write a program detab that replaces tabs in the input with the proper number of blanks
@@ -456,7 +542,11 @@ void detab(int tab_width) {
 }
 
 
-void emtab(int tab_width) {
+/* Exercise 1-21. Write a program entab that replaces strings of blanks by the minimum number of tabs and blanks to
+ * achieve the same spacing. Use the same tab stops as for detab.
+ * When either a tab or a single blank would suffice to reach a tab stop, which should be given preference? (tab)
+ */
+void entab(int tab_width) {
   int c;
   int num_char_this_line = 0, num_consecutive_space = 0;
   while ((c = getchar()) != EOF) {
@@ -494,22 +584,50 @@ void emtab(int tab_width) {
 }
 
 
-void fold_long_lines(int width) {
-  // TODO
+/* Exercise 1-22. Write a program to "fold" long input lines into two or more shorter lines
+ * after the last non-blank character that occurs before the n-th column of input.
+ * Make sure your program does something intelligent with very long lines,
+ * and if there are no blanks or tabs before the specified column.
+ */
+void fold_long_lines(const int max_width, int tab_size) {
+  int c;
+  char word[max_width + 1];
+  int pos = 0, word_len = 0;
+
+  while ((c = getchar()) != EOF) {
+    if (c == ' ' || c == '\t' || c == '\n') {
+      word[word_len] = '\0';
+      if (pos + word_len >= max_width) {
+        printf("\n");
+        pos = word_len;
+      } else {
+        if (c == '\n') { pos = 0; }
+        else if (c == '\t') { pos += tab_size; }
+        else { ++pos; }
+      }
+      printf("%s", word);
+      putchar(c);
+      pos = 0;
+    } else {
+      word[word_len++] = c;
+    }
+    ++pos;
+  }
 }
 
 
-void file_io_test() {
-  // For Windows: use Ctrl+Z to send EOF with keyboard
 
-//  copy_input_to_output();
-//  detab(8);   // 8 for powershell
-  emtab(8);   // 8 for powershell
+/* Exercise 1-23. Write a program to remove all comments from a C program.
+ * Don't forget to handle quoted strings and character constants properly. C comments don't nest.
+ */
+void remove_comments() {
 
 }
 
 
 int main() {
+  const int WINDOWS_TAB_WIDTH = 8;
+  const int UNIX_TAB_WIDTH = 4;
   // temperature tables
 
 //  temperature_table();
@@ -529,11 +647,18 @@ int main() {
 
 //  word_count();
 //  print_one_word_per_line();
+
 //  word_len_histogram();
 //  char_histogram();
-  printf("%d", longest_input_line());
-//  file_io_test();
-//  print_EOF();
+//  printf("%d", longest_input_line());
+//  print_line_longer_than_threshold();
+//  remove_trailing_whitespace();
+//  reverse();
+
+//  detab(WINDOWS_TAB_WIDTH);
+//  entab(WINDOWS_TAB_WIDTH);
+
+  fold_long_lines(80, WINDOWS_TAB_WIDTH);
 
 
   return 0;
