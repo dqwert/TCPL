@@ -616,11 +616,22 @@ void fold_long_lines(const int max_width, int tab_size) {
 }
 
 
-
 /* Exercise 1-23. Write a program to remove all comments from a C program.
- * Don't forget to handle quoted strings and character constants properly. C comments don't nest.
+ * Don't forget to handle quoted strings and character constants properly.
+ * C comments don't nest.
  */
+// TODO
 void remove_comments() {
+}
+
+
+/* Exercise 1-24. Write a program to check a C program for rudimentary syntax errors
+ * like unmatched parentheses, brackets and braces.
+ * Don't forget about quotes, both single and double, escape sequences, and comments.
+ * (This program is hard if you do it in full generality.)
+ */
+// TODO
+void check_error() {
 
 }
 
@@ -658,8 +669,9 @@ int main() {
 //  detab(WINDOWS_TAB_WIDTH);
 //  entab(WINDOWS_TAB_WIDTH);
 
-  fold_long_lines(80, WINDOWS_TAB_WIDTH);
-
+//  fold_long_lines(80, WINDOWS_TAB_WIDTH);
+//  remove_comments();
+//  check_error();
 
   return 0;
 }
