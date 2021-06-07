@@ -2,6 +2,20 @@
 #include <limits.h>
 
 
+/* Exercise 2-1. Write a program to determine the ranges of char, short, int, and long variables,
+ * both signed and unsigned, by printing appropriate values from standard headers and by direct computation.
+ * Harder if you compute them: determine the ranges of the various floating-point types.
+ */
+void print_integer_range();
+void print_float_range();
+
+
+void determine_ranges() {
+  print_integer_range();
+  print_float_range();
+}
+
+
 void print_integer_range() {
   printf("char\tunsigned:\t%12d\t%12d\n", 0, UCHAR_MAX);
   printf("\t  signed:\t%12d\t%12d\n", CHAR_MIN, CHAR_MAX);
@@ -14,8 +28,6 @@ void print_integer_range() {
   printf("long long\tunsigned:\t%24llu\t%24llu\n", 0llu, ULONG_LONG_MAX);
 //  printf("long long   signed:\t%24lld\t%24lld\n", LONG_LONG_MIN, LONG_LONG_MAX);    // obsolete version of LLONG_MIN, LLONG_MAX
   printf("long long\t  signed:\t%24lld\t%24lld\n", LLONG_MIN, LLONG_MAX);
-
-//  printf("float:\t%f", )
 }
 
 
@@ -45,7 +57,6 @@ void print_float_range() {
   }
   printf("Maximum positive float =%e\n", prev_float);
 
-
   curr_double = 1.0;
   double test_double = 0.0;
   while (test_double == 0.0) {
@@ -54,29 +65,14 @@ void print_float_range() {
     test_double = (test_double + curr_double) - curr_double;
   }
   printf("Maximum positive double=%e\n", prev_double);
-
 }
 
 
-/* getline: read a line into s, return length */
-int getline(char s[], int lim)
-{
-  int c, i;
-  for (i=0; i < lim-1 && (c=getchar())!=EOF && c!='\n'; ++i)
-    s[i] = c;
-  if (c == '\n') {
-    s[i] = c;
-    ++i;
-  }
-  s[i] = '\0';
-  return i;
-}
-
-
+/* Exercise 2-2. Write a loop equivalent to the for loop above without using && or ||. */
 int getline_rewrite(char s[], int lim) {
   int c, i;
-  for (i=0; i < lim-1; ++i) {
-    if ((c=getchar()) == EOF) { break; }
+  for (i = 0; i < lim - 1; ++i) {
+    if ((c = getchar()) == EOF) { break; }
     if (c != '\n') { break; }
     s[i] = c;
   }
@@ -89,6 +85,23 @@ int getline_rewrite(char s[], int lim) {
 }
 
 
+/* original getline: read a line into s, return length */
+int getline(char s[], int lim) {
+  int c, i;
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
+    s[i] = c;
+  if (c == '\n') {
+    s[i] = c;
+    ++i;
+  }
+  s[i] = '\0';
+  return i;
+}
+
+
+/* Exercise 2-3. Write a function htoi(s), which converts a string of hexadecimal digits (including an optional 0x / 0X)
+ * into its equivalent integer value. The allowable digits are 0 through 9, a through f, and A through F.
+ */
 int htoi_(char s[]) {
   if (!s) { return -1; }
 
@@ -110,7 +123,7 @@ int htoi_(char s[]) {
 
   // handle leading "0x" and "0X"
   if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) { s += 2; }
-  
+
   int value = 0;
   for (int i = 0; s[i] != '\0'; ++i) {
     value <<= 4;
@@ -135,17 +148,9 @@ int htoi_(char s[]) {
 }
 
 
-/* squeeze: delete all c from s */
-void squeeze(char s[], int c)
-{
-  int i, j;
-  for (i = j = 0; s[i] != '\0'; i++)
-    if (s[i] != c)
-      s[j++] = s[i];
-  s[j] = '\0';
-}
-
-
+/* Exercise 2-4. Write an alternative version of squeeze(s1,s2)
+ * that deletes each character in s1 that matches any character in the string s2.
+ */
 void squeeze_(char s[], int c) {
   int i, j;
   for (i = j = 0; s[i] != '\0'; ++i) {
@@ -160,6 +165,20 @@ void squeeze_(char s[], int c) {
 }
 
 
+/* original squeeze: delete all c from s */
+void squeeze(char s[], int c) {
+  int i, j;
+  for (i = j = 0; s[i] != '\0'; i++)
+    if (s[i] != c)
+      s[j++] = s[i];
+  s[j] = '\0';
+}
+
+
+/* Exercise 2-5. Write the function any(s1,s2), which returns the first location in a string s1
+ * where any character from the string s2 occurs, or -1 if s1 contains no characters from s2.
+ * (The standard library function strpbrk does the same job but returns a pointer to the location.)
+ */
 int any(const char s1[], const char s2[]) {
   int i;
   for (i = 0; s1[i] != '\0'; ++i) {
@@ -171,30 +190,32 @@ int any(const char s1[], const char s2[]) {
 }
 
 
+/* Exercise 2-6. Write a function setbits(x,p,n,y) that returns x with
+ * the n bits that begin at position p set to the rightmost n bits of y, leaving the other bits unchanged.
+ */
 unsigned setbits(unsigned x, unsigned p, unsigned n, unsigned y) {
   unsigned mask = (1 << n) - 1;
   return x & (mask << (p + 1 - n)) | ((y & mask) << (p + 1 - n));
 }
 
 
-//Exercise 2-7. Write a function invert(x,p,n) that returns x with the n bits that begin at
-//position p inverted (i.e., 1 changed into 0 and vice versa), leaving the others unchanged.
-unsigned invert(unsigned x,  unsigned p, unsigned n) {
-  
+/* Exercise 2-7. Write a function invert(x,p,n) that returns x with the n bits that begin at
+ * position p inverted (i.e., 1 changed into 0 and vice versa), leaving the others unchanged.
+ */
+unsigned invert(unsigned x, unsigned p, unsigned n) {
+
 }
 
 
-//Exercise 2-8. Write a function rightrot(x,n) that returns the value of the integer x rotated
-//to the right by n positions
+/* Exercise 2-8. Write a function rightrot(x,n) that returns the value of the integer x rotated
+ * to the right by n positions.
+ */
 
 
 int main() {
-//  print_integer_range();
-
-//  print_float_range();
+  determine_ranges();
 
 //  printf("%d", htoi_("  0Xff"));
-
 //  char s[] = "helllo? Hello!";
 //  squeeze_(s, 'l');
 //  printf("%s", s);
