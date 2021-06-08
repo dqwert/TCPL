@@ -17,11 +17,11 @@ void determine_ranges() {
 
 
 void print_integer_range() {
-  printf("char\tunsigned:\t%12d\t%12d\n", 0, UCHAR_MAX);
+  printf("char\tunsigned:\t%12u\t%12u\n", 0, UCHAR_MAX);
   printf("\t  signed:\t%12d\t%12d\n", CHAR_MIN, CHAR_MAX);
-  printf("short\tunsigned:\t%12d\t%12d\n", 0, USHRT_MAX);
+  printf("short\tunsigned:\t%12u\t%12u\n", 0, USHRT_MAX);
   printf("\t  signed:\t%12d\t%12d\n", SHRT_MIN, SHRT_MAX);
-  printf("int\tunsigned:\t%12d\t%12d\n", 0, UINT_MAX);
+  printf("int\tunsigned:\t%12u\t%12u\n", 0, UINT_MAX);
   printf("\t  signed:\t%12d\t%12d\n", INT_MIN, INT_MAX);
   printf("long\tunsigned:\t%12lu\t%12lu\n", 0lu, ULONG_MAX);
   printf("\t  signed:\t%12ld\t%12ld\n", LONG_MIN, LONG_MAX);
@@ -195,7 +195,8 @@ int any(const char s1[], const char s2[]) {
  */
 unsigned setbits(unsigned x, unsigned p, unsigned n, unsigned y) {
   unsigned mask = (1 << n) - 1;
-  return x & (mask << (p + 1 - n)) | ((y & mask) << (p + 1 - n));
+  unsigned offset = p + 1 - n;
+  return x & (mask << offset) | ((y & mask) << offset);
 }
 
 
@@ -203,17 +204,65 @@ unsigned setbits(unsigned x, unsigned p, unsigned n, unsigned y) {
  * position p inverted (i.e., 1 changed into 0 and vice versa), leaving the others unchanged.
  */
 unsigned invert(unsigned x, unsigned p, unsigned n) {
-
+  unsigned mask = (1 << n) - 1;
+  unsigned offset = p + 1 - n;
+  unsigned to_invert = (x & (mask << offset)) >> offset;
+  unsigned inverted = (~to_invert & mask) << offset;
+  return x & (mask << offset) | inverted;
 }
 
 
 /* Exercise 2-8. Write a function rightrot(x,n) that returns the value of the integer x rotated
  * to the right by n positions.
  */
+unsigned rightrot(unsigned x, unsigned n) {
+  const unsigned BYTE_WIDTH = 8;
+
+  unsigned offset = sizeof(x) * BYTE_WIDTH - n;
+  return (x >> n) | (x << offset);
+}
+
+
+/* Exercise 2-9. In a two's complement number system, x &= (x-1) deletes the rightmost 1-bit in x. Explain why.
+ * Use this observation to write a faster version of bitcount.
+ */
+// Answer: (x-1) will flip bits from the rightmost to first '1', then & will zero out all the changed bits.
+unsigned bitcount_(unsigned x) {
+  unsigned b;
+  for (b = 0; x != 0; ++b) {
+    x &= (x - 1);
+  }
+  return b;
+}
+
+
+/* original bitcount: count 1 bits in x */
+unsigned bitcount(unsigned x) {
+  unsigned b;
+  for (b = 0; x != 0; x >>= 1) {
+    if (x & 01) { ++b; }
+  }
+  return b;
+}
+
+
+/* Exercise 2-10. Rewrite the function lower, which converts upper case letters to lower case,
+ * with a conditional expression instead of if-else.
+ */
+int lower_(int c) {
+  return (c >= 'A' && c <= 'Z') ? (c - 'A' + 'a') : c;
+}
+
+
+/* original lower: convert c to lower case; ASCII only */
+int lower(int c) {
+  if (c >= 'A' && c <= 'Z') { return c - 'A' + 'a'; }
+  else { return c; }
+}
 
 
 int main() {
-  determine_ranges();
+//  determine_ranges();
 
 //  printf("%d", htoi_("  0Xff"));
 //  char s[] = "helllo? Hello!";
@@ -226,7 +275,21 @@ int main() {
 //    printf("%d, ",   any("abcdefghijklmnopqrstuvwxyz", s2));
 //  }
 
-//  printf("%u", setbits(0, 8, 8, 255));
+//  printf("%u\n", setbits(0, 8, 8, 255));
+//  printf("%u\n", invert(0, 7, 3));
+//  printf("%u\n", rightrot(8, 2));
+
+//  printf("[check bitcount_ against bitcount]\n");
+//  for (unsigned i = 0; i < 65536; ++i) {
+//    if (bitcount_(i) != bitcount(i)) { printf("Error result from input: %u\n", i); }
+//  }
+//  printf("All testcases passed.\n");
+
+  printf("[check lower_ against lower]\n");
+  for (char i = 0; i < CHAR_MAX; ++i) {
+    if (lower_(i) != lower(i)) { printf("Error result from input: %u\n", i); }
+  }
+  printf("All testcases passed.\n");
 
   return 0;
 }
