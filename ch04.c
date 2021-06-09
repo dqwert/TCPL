@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#define MAX_LINE 1000 /* maximum input line length */
 
-int get_line(char line[], int max);
-int str_index(char source[], char search_for[]);
+int get_line(char s[], int lim);
+int str_index(char source[], char t[]);
 
-char pattern[] = "ould";      // pattern to search for
 
 /* find all lines matching pattern */
 int find_all_matching_lines() {
+  const int MAX_LINE = 1000;
+
+  char pattern[] = "ould";      // pattern to search for
+
   char line[MAX_LINE];
   int found = 0;
 
@@ -62,7 +64,19 @@ void test_no_return_function() {
 }
 
 
-/* atof: convert string s to double */
+/* Exercise 4-1. Write the function strindex(s,t) which returns
+ * the position of the rightmost occurrence of t in s, or -1 if there is none.
+ */
+int strindex(char s[], char t) {
+  int i, i_max = -1;
+  for (i = 0; s[i] != '\0'; ++i) {
+    if (s[i] == t) { i_max = i; }
+  }
+  return i_max;
+}
+
+
+/* Exercise 4-2. Extend atof to handle scientific notation of the form. */
 double atof_(char s[]) {
   double val, power;
   int i, sign;
@@ -80,6 +94,14 @@ double atof_(char s[]) {
 }
 
 
+/* original atof: convert string s to double */
+double atof(char s[]) {
+  double val, power;
+  int i, sing;
+
+}
+
+
 /* atoi: convert string s to integer using atof */
 int atoi(char s[]) {
   double atof(char s[]);
@@ -89,6 +111,10 @@ int atoi(char s[]) {
 
 
 int main() {
-  test_no_return_function();
+//  char s[] = "helllllllllo";
+//  printf("%d\n", strindex(s, 'l'));
+//  printf("%d\n", strindex(s, '0'));
+
+//  test_no_return_function();
   return 0;
 }
