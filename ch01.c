@@ -19,7 +19,7 @@
 
 /* Exercise 1-3. Modify the temperature conversion program to print a heading above the table. */
 /* print Fahrenheit-Celsius table for fahr = 0, 20, ..., 300; */
-void temperature_table() {
+void temperature_table(void) {
   int fahr, celsius;
   int lower, upper, step;
 
@@ -42,7 +42,7 @@ void temperature_table() {
 /* print Fahrenheit-Celsius table for fahr = 0, 20, ..., 300;
  * floating-point version
  */
-void temperature_table_float() {
+void temperature_table_float(void) {
   float fahr, celsius;
   int lower, upper, step;
 
@@ -63,7 +63,7 @@ void temperature_table_float() {
 
 
 /* Exercise 1-4. Write a program to print the corresponding Celsius to Fahrenheit table. */
-void temperature_table_reverse_convert() {
+void temperature_table_reverse_convert(void) {
   float fahr, celsius;
   int lower, upper, step;
 
@@ -89,7 +89,7 @@ void temperature_table_reverse_convert() {
 /* print Fahrenheit-Celsius table for fahr = 0, 20, ..., 300;
  * for statement version, in reverse order
  */
-void temperature_table_for() {
+void temperature_table_for(void) {
   int fahr;
   float celsius;
   int lower, upper, step;
@@ -111,7 +111,7 @@ void temperature_table_for() {
 /* Exercise 1-5. Modify the temperature conversion program to
  * print the table in reverse order, that is, from 300 degrees to 0.
  */
-void temperature_table_reverse_order() {
+void temperature_table_reverse_order(void) {
   int fahr;
   float celsius;
   int lower, upper, step;
@@ -133,7 +133,7 @@ void temperature_table_reverse_order() {
 /* print Fahrenheit-Celsius table for fahr = 0, 20, ..., 300;
  * for statement symbolic constants version
  */
-void temperature_table_symbolic_constants() {
+void temperature_table_symbolic_constants(void) {
   int fahr;
   float celsius;
 
@@ -160,7 +160,7 @@ void temperature_table_symbolic_constants() {
 /* --- 1.5 Character Input and Output --- */
 
 
-void copy_input_to_output() {
+void copy_input_to_output(void) {
   int c;
 
   c = getchar();
@@ -172,7 +172,7 @@ void copy_input_to_output() {
 }
 
 
-void copy_input_to_output_1() {
+void copy_input_to_output_1(void) {
   int c;
 
   // parenthesis is necessary
@@ -188,14 +188,14 @@ void copy_input_to_output_1() {
 
 
 /* Exercise 1-7. Write a program to print the value of EOF. */
-void print_EOF() {
+void print_EOF(void) {
   printf("Value of EOF: %d\n", EOF);
   /* -1 on a Windows 10 with MSVC */
 }
 
 
 /* Exercise 1-8. Write a program to count blanks, tabs, and newlines. */
-void count_white_space() {
+void count_white_space(void) {
   int c;
   int black_cnt = 0, tab_cnt = 0, newline_cnt = 0;
   while ((c = getchar()) != EOF) {
@@ -215,7 +215,7 @@ void count_white_space() {
 /* Exercise 1-9. Write a program to copy its input to its output,
  * replacing each string of one or more blanks by a single blank.
  */
-void reduce_target_char() {
+void reduce_target_char(void) {
   int c;
   const char TARGET = ' ';
   int prev_hit = 0;
@@ -238,7 +238,7 @@ void reduce_target_char() {
  * replacing each tab by \t, each backspace by \b, and each backslash by \\.
  * This makes tabs and backspaces visible in an unambiguous way.
  */
-void replace_white_space() {
+void replace_white_space(void) {
   int c;
   while ((c = getchar()) != EOF) {
     if (c == '\t') {
@@ -258,7 +258,7 @@ void replace_white_space() {
 
 
 /* count lines, words, and characters in input. */
-void word_count() {
+void word_count(void) {
 #define IN  1     /* inside  a word */
 #define OUT 0     /* outside a word */
   int c, nl, nw, nc, state;
@@ -299,7 +299,7 @@ void word_count() {
 
 
 /* Exercise 1-12. Write a program that prints its input one word per line. */
-void print_one_word_per_line() {
+void print_one_word_per_line(void) {
   const int IN = 1;
   const int OUT = 0;
 
@@ -322,7 +322,7 @@ void print_one_word_per_line() {
  * It is easy to draw the histogram with the bars horizontal;
  * a vertical orientation is more challenging.
  */
-void word_len_histogram() {
+void word_len_histogram(void) {
   const int IN = 1;
   const int OUT = 0;
   const int MAX_LEN = 10;
@@ -365,7 +365,7 @@ void word_len_histogram() {
 
 // TODO
 /* Exercise 1-14. Write a program to print a histogram of the frequencies of different characters in its input. */
-void char_histogram() {
+void char_histogram(void) {
   printf("TODO\n");
 }
 
@@ -392,7 +392,7 @@ int getline(char s[], int lim) {
 }
 
 
-int longest_input_line() {
+int longest_input_line(void) {
   const int MAX_LINE = 1000;
 
   int len;
@@ -423,7 +423,7 @@ int longest_input_line() {
 /* Exercise 1-17. Write a program to print all input lines that are longer than 80 characters. */
 // TODO: revise when necessary
 // Adopted from https://codereview.stackexchange.com/a/79076
-void print_line_longer_than_threshold() {
+void print_line_longer_than_threshold(void) {
   const int MIN_LEN = 80;
 
   int c;
@@ -454,7 +454,7 @@ void print_line_longer_than_threshold() {
  */
 // TODO: handle buffer overflow
 // Adopted from https://stackoverflow.com/a/55028476/14094521
-void remove_trailing_whitespace() {
+void remove_trailing_whitespace(void) {
   const int MAX_LEN = 1000;
   const int IN_LINE = 1;
   const int OUT_LINE = 0;
@@ -496,7 +496,7 @@ void reverse_line(char s[]) {
 }
 
 
-void reverse() {
+void reverse(void) {
   const int MAX_LEN = 1000;
 
   int c;
@@ -621,7 +621,7 @@ void fold_long_lines(const int max_width, int tab_size) {
  * C comments don't nest.
  */
 // TODO
-void remove_comments() {
+void remove_comments(void) {
 }
 
 
@@ -631,12 +631,12 @@ void remove_comments() {
  * (This program is hard if you do it in full generality.)
  */
 // TODO
-void check_error() {
+void check_error(void) {
 
 }
 
 
-int main() {
+int main(void) {
   const int WINDOWS_TAB_WIDTH = 8;
   const int UNIX_TAB_WIDTH = 4;
   // temperature tables

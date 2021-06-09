@@ -222,7 +222,7 @@ void itoa__(int n, char s[], int width) {
 }
 
 
-int main() {
+int main(void) {
 //  char s[16];
 //  itoa__(234, s, 7);
 //  printf("%s\n", s);

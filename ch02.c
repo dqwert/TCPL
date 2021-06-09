@@ -10,13 +10,13 @@ void print_integer_range();
 void print_float_range();
 
 
-void determine_ranges() {
+void determine_ranges(void) {
   print_integer_range();
   print_float_range();
 }
 
 
-void print_integer_range() {
+void print_integer_range(void) {
   printf("char\tunsigned:\t%12u\t%12u\n", 0, UCHAR_MAX);
   printf("\t  signed:\t%12d\t%12d\n", CHAR_MIN, CHAR_MAX);
   printf("short\tunsigned:\t%12u\t%12u\n", 0, USHRT_MAX);
@@ -31,7 +31,7 @@ void print_integer_range() {
 }
 
 
-void print_float_range() {
+void print_float_range(void) {
   float curr_float = 1.0f, prev_float;
   double curr_double = 1.0, prev_double;
 
@@ -261,7 +261,7 @@ int lower(int c) {
 }
 
 
-int main() {
+int main(void) {
 //  determine_ranges();
 
 //  printf("%d", htoi_("  0Xff"));
