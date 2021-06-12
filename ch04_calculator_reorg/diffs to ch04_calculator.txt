@@ -1,0 +1,2 @@
+1 reorg files
+2 add `static` to variable buffer & i_buf in getch.c, sp & val in stack.c

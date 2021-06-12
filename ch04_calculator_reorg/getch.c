@@ -3,8 +3,8 @@
 #define BUFFER_SIZE 100
 
 
-char buffer[BUFFER_SIZE];
-int i_buf = 0;                  // next free position in buffer
+static char buffer[BUFFER_SIZE];
+static int i_buf = 0;                  // next free position in buffer
 
 
 int getch(void) {
