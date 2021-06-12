@@ -70,17 +70,37 @@ int getint(int *pn) {
 
 
 /* Exercise 5-3. Write a pointer version of the function strcat that we showed in Chapter 2:
- * strcat(s,t) copies the string t to the end of s.
+ * str_cat(s,t) copies the string t to the end of s.
  */
-void strcat(char * s, char * t) {
-  int i, j;
+void str_cat_(char * s, char * t) {
+  while (*s) { ++s; }
+  while ((*(s++) = *(t++)) != '\0') {}
 }
 
 
-/* Exercise 5-4. Write the function strend(s,t), which returns 1 if the string t occurs at the end of the string s,
+/* str_cat: concatenate t to end of s; s must be big enough */
+void str_cat(char * s, char * t) {
+  int i = 0, j = 0;
+
+  while (s[i] != '\0') { ++i; }
+  while ((s[i++] = t[j++]) != '\0') {}
+}
+
+
+/* Exercise 5-4. Write the function str_end(s,t), which returns 1 if the string t occurs at the end of the string s,
  * and zero otherwise.
  */
+int str_end(char * s, char * t) {
+  int s_len = 0, t_len = 0;
+  while (*s) { ++s; ++s_len; }
+  while (*t) { ++t; ++t_len; }
+  if (t_len > s_len) { return 0; }
 
+  while (t_len-- >= 0) {
+    if (*(s--) != *(t--)) { return 0; }
+  }
+  return 1;
+}
 
 
 /* Exercise 5-5. Write versions of the library functions strncpy, strncat, and strncmp,
@@ -97,5 +117,16 @@ void strcat(char * s, char * t) {
 
 
 int main(void) {
+//  char s[] = "Hello, \0space_for_concatenation";
+//  char t[] = "world!";
+//  printf("%s\n", s);
+//  str_cat_(s, t);
+//  printf("%s\n", s);
+//
+//  if (str_end(s, t)) {
+//    printf("t occurs at the end of the string s\n");
+//  } else {
+//    printf("t does not occur at the end of the string s\n");
+//  }
 
 }
