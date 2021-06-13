@@ -3,13 +3,14 @@
 
 
 int getch(void);
+
 void ungetch(int);
 
 
 /* Exercise 5-1. As written, getint treats a + or - not followed by a digit as a valid representation of zero.
  * Fix it to push such a character back on the input.
  */
-int getint_(int *pn) {
+int getint_(int * pn) {
   int c, sign;
 
   while (isspace(c = getch())) {}
@@ -43,7 +44,7 @@ int getint_(int *pn) {
 
 
 /* getint: get next integer from input into *pn */
-int getint(int *pn) {
+int getint(int * pn) {
   int c, sign;
 
   while (isspace(c = getch())) {}
@@ -92,8 +93,14 @@ void str_cat(char * s, char * t) {
  */
 int str_end(char * s, char * t) {
   int s_len = 0, t_len = 0;
-  while (*s) { ++s; ++s_len; }
-  while (*t) { ++t; ++t_len; }
+  while (*s) {
+    ++s;
+    ++s_len;
+  }
+  while (*t) {
+    ++t;
+    ++t_len;
+  }
   if (t_len > s_len) { return 0; }
 
   while (t_len-- >= 0) {
@@ -107,6 +114,79 @@ int str_end(char * s, char * t) {
  * which operate on at most the first n characters of their argument strings.
  * For example, strncpy(s,t,n) copies at most n characters of t to s. Full descriptions are in Appendix B.
  */
+char * str_n_cpy(char * s, const char * t, int n) {
+  char * curr = s;
+  while (n-- && *curr != '\0') {
+    if (*t) { *(curr++) = *(t++); }
+    else { *(curr++) = '\0'; }
+  }
+  return s;
+}
+
+
+void test_str_n_copy() {
+  const char* src = "hi";
+  char dest[6] = {'a', 'b', 'c', 'd', 'e', 'f'};
+  str_n_cpy(dest, src, 5);
+
+  printf("The contents of dest are: ");
+  for (int i = 0; i < sizeof(dest) / sizeof(dest[0]); ++i) {
+    if (dest[i]) { printf("%c ", dest[i]); }
+    else { printf("\\0 "); }
+  }
+  printf("\n");
+}
+
+
+char * str_n_cat(char * s, char * ct, int n) {
+  char * curr = s;
+
+  while (*(curr) != '\0') { ++curr; }
+  while (n-- && *ct) { *(curr++) = *(ct++); }
+
+  return s;
+}
+
+
+void test_str_n_cat() {
+  char str[50] = "Hello ";
+  str_n_cat(str, " Goodbye World!", 3);
+  printf("%s\n", str);
+}
+
+
+int str_n_cmp(const char * s, const char * ct, int n) {
+  while (n--) {
+    if (*s != *ct) { return *s - *ct; }
+    ++s;
+    ++ct;
+  }
+
+  return 0;
+}
+
+
+
+void format_str_n_cmp_output(const char* lhs, const char* rhs, int sz)
+{
+  int rc = str_n_cmp(lhs, rhs, sz);
+  if(rc == 0)
+    printf("First %d chars of [%s] equal [%s]\n", sz, lhs, rhs);
+  else if(rc < 0)
+    printf("First %d chars of [%s] precede [%s]\n", sz, lhs, rhs);
+  else if(rc > 0)
+    printf("First %d chars of [%s] follow [%s]\n", sz, lhs, rhs);
+
+}
+
+
+void test_str_n_cmp() {
+  const char* string = "Hello World!";
+  format_str_n_cmp_output(string, "Hello!", 5);
+  format_str_n_cmp_output(string, "Hello", 10);
+  format_str_n_cmp_output(string, "Hello there", 10);
+  format_str_n_cmp_output(&"Hello, everybody!"[12], &"Hello, somebody!"[11], 5);
+}
 
 
 /* Exercise 5-6. Rewrite appropriate programs from earlier chapters and exercises
@@ -118,15 +198,25 @@ int str_end(char * s, char * t) {
 
 int main(void) {
 //  char s[] = "Hello, \0space_for_concatenation";
-//  char t[] = "world!";
-//  printf("%s\n", s);
+//  char t[] = "world";
+//  printf("s=%s\n", s);
+//  printf("t=%s\n", s);
+
 //  str_cat_(s, t);
-//  printf("%s\n", s);
+//  printf("s=%s\n", s);
 //
 //  if (str_end(s, t)) {
 //    printf("t occurs at the end of the string s\n");
 //  } else {
 //    printf("t does not occur at the end of the string s\n");
 //  }
+
+//  for (int i = 0; i < sizeof(t) / sizeof(t[0]) + 1; ++i) {
+//    printf("n=%d,%s\n", i, str_n_cpy(s, t, i));
+//  }
+
+// test_str_n_copy();
+// test_str_n_cat();
+// test_str_n_cmp();
 
 }
