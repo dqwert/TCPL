@@ -194,6 +194,37 @@ void test_str_n_cmp() {
  * Good possibilities include getline (Chapters 1 and 4), atoi, itoa, and their variants (Chapters 2, 3, and 4),
  * reverse (Chapter 3), and strindex and getop (Chapter 4).
  */
+int getline__(char * s, int lim) {
+  char * curr = s;
+  int c;
+
+  while ((c = getchar()) != EOF && c != '\n' && curr - s < lim - 1) { *(curr++) = c; }
+
+  if (c == '\n') { *(curr++) = c; }
+
+  *curr = '\0';
+  return curr - s;
+}
+
+
+/* original getline: read a line into s, return length. */
+int getline_(char s[], int lim) {
+  int c, i;
+
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) { s[i] = c; }
+  if (c == '\n') {
+    s[i] = c;
+    ++i;
+  }
+  s[i] = '\0';
+  return i;
+}
+
+
+/* Exercise 5-7. Rewrite readlines to store lines in an array supplied by main,
+ * rather than calling alloc to maintain storage. How much faster is the program?
+ */
+// TODO
 
 
 int main(void) {

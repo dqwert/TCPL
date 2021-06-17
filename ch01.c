@@ -379,7 +379,7 @@ void char_histogram(void) {
  */
 
 /* getline: read a line into s, return length. */
-int getline(char s[], int lim) {
+int getline_(char s[], int lim) {
   int c, i;
 
   for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) { s[i] = c; }
@@ -387,7 +387,7 @@ int getline(char s[], int lim) {
     s[i] = c;
     ++i;
   }
-  s[i] = '\n';
+  s[i] = '\0';
   return i;
 }
 
@@ -401,10 +401,10 @@ int longest_input_line(void) {
   char longest[MAX_LINE];
 
   max = 0;
-  while ((len = getline(line, MAX_LINE)) > 0) {
+  while ((len = getline_(line, MAX_LINE)) > 0) {
     if (len == MAX_LINE - 1 && line[MAX_LINE - 2] != '\n') {
       int len_rest;
-      while ((len_rest = getline(line, MAX_LINE)) > 0) {
+      while ((len_rest = getline_(line, MAX_LINE)) > 0) {
         len += len_rest;
         printf("len_rest=%d\n", len_rest);
       }
