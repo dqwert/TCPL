@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 
 int getch(void);
@@ -225,6 +227,132 @@ int getline_(char s[], int lim) {
  * rather than calling alloc to maintain storage. How much faster is the program?
  */
 // TODO
+
+
+/* Exercise 5-7. Rewrite readlines to store lines in an array supplied by main,
+ * rather than calling alloc to maintain storage. How much faster is the program?
+ */
+#define MAXLEN 1000
+
+/* original getline from ch02: read a line into s, return length */
+int getline(char s[], int lim) {
+  int c, i;
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
+    s[i] = c;
+  if (c == '\n') {
+    s[i] = c;
+    ++i;
+  }
+  s[i] = '\0';
+  return i;
+}
+
+
+// not sure if it's correct
+int readlines_(char lines[][MAXLEN], int maxlines) {
+  int len, nlines;
+  char line[MAXLEN];
+
+  nlines = 0;
+  while ((len = getline(line, MAXLEN)) > 0) {
+    if (nlines >= maxlines) { return -1; }
+    else {
+      line[len - 1] = '\0';
+      strcpy(lines[nlines++], line);
+    }
+  }
+  return nlines;
+}
+
+
+/* readlines: read input lines */
+int readlines(char * lineptr[], int maxlines) {
+  int len, nlines;
+  char *p, line[MAXLEN];
+
+  nlines = 0;
+  while ((len = getline(line, MAXLEN)) > 0) {
+    if (nlines >= maxlines || (p = malloc(len)) == NULL) { return -1; }
+    else {
+      line[len - 1] = '\0';
+      strcpy(p, line);
+      lineptr[nlines++] = p;
+    }
+  }
+  return nlines;
+}
+
+#undef MAXLEN
+
+
+/* Exercise 5-8. There is no error checking in day_of_year or month_day. Remedy this defect. */
+int day_of_year_(int year, int month, int day) {
+  if (month < 1 || month > 12) { return -1; }
+
+  char daytab[2][13] = { {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+                         {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31} };
+
+  int i, leap;
+  leap = year % 4 == 0&& year % 100 != 0 || year % 400 == 0;
+
+  if (day > daytab[leap][month] || day < 1) { return -1; }  // can put `day < 1` to the front
+
+  for (i = 1; i < month; i++) {
+    day += daytab[leap][i];
+  }
+  return day;
+}
+
+
+void month_day_(int year, int yearday, int *pmonth, int *pday) {
+  char daytab[2][13] = { {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+                         {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31} };
+
+  int i, leap;
+
+  leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+  for (i = 1; yearday > daytab[leap][i]; i++) {
+    yearday -= daytab[leap][i];
+  }
+
+  if (yearday > 31 || yearday < 1) {   // can put `yearday < 1` to the front
+    *pmonth = *pday = -1;
+    return;
+  }
+
+  *pmonth = i;
+  *pday = yearday;
+}
+
+
+/* day_of_year: set day of year from month & day */
+int day_of_year(int year, int month, int day) {
+  char daytab[2][13] = { {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+                         {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31} };
+
+  int i, leap;
+  leap = year % 4 == 0&& year % 100 != 0 || year % 400 == 0;
+  for (i = 1; i < month; i++) {
+    day += daytab[leap][i];
+  }
+  return day;
+}
+
+
+/* month_day: set month, day from day of year */
+void month_day(int year, int yearday, int *pmonth, int *pday) {
+  char daytab[2][13] = { {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+                         {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31} };
+
+  int i, leap;
+
+  leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+  for (i = 1; yearday > daytab[leap][i]; i++) {
+    yearday -= daytab[leap][i];
+  }
+  *pmonth = i;
+  *pday = yearday;
+}
 
 
 int main(void) {
