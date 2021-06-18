@@ -17,6 +17,7 @@ void ungetch(int c) {
   else buffer[i_buf++] = c;
 }
 
+
 // Exercise 4-7 began
 void ungets(char s[]) {
   int i_buf_backup = i_buf;

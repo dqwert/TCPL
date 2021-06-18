@@ -355,6 +355,141 @@ void month_day(int year, int yearday, int *pmonth, int *pday) {
 }
 
 
+/* echo command-line arguments; 1st version */
+int echo_by_index(int argc, char * argv[]) {
+  for (int i = 1; i < argc; ++i) { printf("%s%s", argv[i], (i < argc-1) ? " " : ""); }
+  printf("\n");
+  return 0;
+}
+
+
+/* echo command-line arguments; 2nd version */
+int echo_by_pointer(int argc, char * argv[]) {
+  while (--argc) { printf("%s%s", *++argv, (argc > 1) ? " " : ""); }
+  printf("\n");
+  return 0;
+}
+
+
+// warp functions require commandline arguments in main
+
+
+/* Exercise 5-10. Write the program expr, which evaluates a reverse Polish expression from the command line,
+ * where each operator or operand is a separate argument. For example, `expr 2 3 4 + *` evaluates `2 * (3+4)`.
+ */
+// see ch05_calculator_cli
+
+
+/* Exercise 5-11. Modify the program entab and detab (in Chapter 1) to accept a list of tab stops as arguments.
+ * Use the default tab settings if there are no arguments.
+ */
+
+// copy from ch01.c
+void detab(int tab_width);
+void entab(int tab_width);
+
+
+int detab_cli(int argc, char * argv[]) {
+  const int WINDOWS_TAB_WIDTH = 8;
+  const int UNIX_TAB_WIDTH = 4;
+
+  int tab_width = UNIX_TAB_WIDTH;
+  int temp;
+  if (argc >= 2 && (temp = atoi(argv[1])) != 0) {
+    tab_width = temp;
+  }
+  detab(tab_width);
+}
+
+
+int emtab_cli(int argc, char * argv[]) {
+  const int WINDOWS_TAB_WIDTH = 8;
+  const int UNIX_TAB_WIDTH = 4;
+
+  int tab_width = UNIX_TAB_WIDTH;
+  int temp;
+  if (argc >= 2 && (temp = atoi(argv[1])) != 0) {
+    tab_width = temp;
+  }
+  entab(tab_width);
+}
+
+
+void detab(int tab_width) {
+  int c;
+  int num_char_this_line = 0;
+  while ((c = getchar()) != EOF) {
+    if (c == '\t') {
+      int num_space = tab_width - (num_char_this_line % tab_width);
+      num_char_this_line += num_space;
+//      printf(" [%d]", num_space);
+      while (num_space--) {
+        putchar(' ');
+      }
+    } else if (c == '\n') {
+      putchar(c);
+      num_char_this_line = 0;
+    } else {
+      putchar(c);
+      ++num_char_this_line;
+    }
+  }
+}
+
+
+void entab(int tab_width) {
+  int c;
+  int num_char_this_line = 0, num_consecutive_space = 0;
+  while ((c = getchar()) != EOF) {
+    if (c == ' ') {
+      ++num_consecutive_space;
+    } else {
+      if (num_consecutive_space > 0) {
+        int num_head = num_char_this_line % tab_width;
+        int num_tab = (num_head + num_consecutive_space) / tab_width;
+        int num_space = (num_head + num_consecutive_space) - num_tab * tab_width;
+        if (num_tab == 0) {
+          num_space = num_consecutive_space;
+        }
+//        printf("[num_tab=%d, num_space=%d]", num_tab, num_space);
+        while (num_tab--) {
+          putchar('\t');
+        }
+        while (num_space--) {
+          putchar(' ');
+        }
+        num_char_this_line += num_consecutive_space;
+        num_consecutive_space = 0;
+      }
+      putchar(c);
+
+      if (c == '\n') {
+        num_char_this_line = 0;
+      } else if (c == '\t') {
+        num_char_this_line += tab_width - num_char_this_line % tab_width;
+      } else {
+        ++num_char_this_line;
+      }
+    }
+  }
+}
+
+
+/* Exercise 5-12. Extend entab and detab to accept the shorthand `entab -m +n` to mean tab stops every n columns,
+ * starting at column m. Choose convenient (for the user) default behavior.
+ */
+
+
+/* Exercise 5-13. Write the program tail, which prints the last n lines of its input.
+ * By default, n is set to 10, let us say, but it can be changed by an optional argument so that
+ * `tail -n` prints the last n lines.
+ * The program should behave rationally no matter how unreasonable the input or the value of n.
+ * Write the program so it makes the best use of available storage;
+ * lines should be stored as in the sorting program of Section 5.6, not in a two-dimensional array of fixed size.
+ */
+
+
+
 int main(void) {
 //  char s[] = "Hello, \0space_for_concatenation";
 //  char t[] = "world";

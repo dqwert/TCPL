@@ -1,0 +1,2 @@
+1 change reverse_polish_calculator(), getop()
+2 remove getch.c

@@ -4,7 +4,7 @@
 #define NUMBER '0'
 
 
-void reverse_polish_calculator(void);
+void reverse_polish_calculator(int argc, char * argv[]);
 
 void push(double);
 double top(void);
@@ -14,9 +14,6 @@ void print_stack(void);
 void swap_top_two(void);
 void clear(void);
 
-int getop(char []);
-
-int getch(void);
-void ungetch(int);
+int getop(char s[]);
 
 #endif //TCPL_CALC_H

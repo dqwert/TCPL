@@ -1,37 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <math.h>
 
-
-#define NUMBER '0'
-
-
-void push(double);
-double top(void);
-double pop(void);
-void dup_top(void);
-void print_stack(void);
-void swap_top_two(void);
-void clear(void);
+#include "calc.h"
 
 
-int getop(char []);
-
-
-void reverse_polish_calculator() {
+void reverse_polish_calculator(int argc, char * argv[]) {
   const int MAXOP = 100;
 
   int type;
   double op2;
-  char s[MAXOP];
-
+  char * s;
 
 // Exercise 4-6 begins
   double last_printed = 0.0;
 // Exercise 4-6 ends
 
-  while ((type = getop(s)) != EOF) {
+  for (int i = 1; i < argc; ++i) {
+    s = argv[i];
+    type = getop(s);
+
     switch (type) {
       case NUMBER:
         push(atof(s));
@@ -113,34 +101,6 @@ void reverse_polish_calculator() {
         break;
     }
   }
-}
+  printf("\t%.8g\n",  top());
 
-
-int getch(void);
-void ungetch(int);
-
-
-/* getop: get next character or numeric operand */
-int getop(char s[]) {
-  int i, c;
-
-  while ((s[0] = c = getch()) == ' ' || c == '\t') {}
-
-  s[1] = '\0';
-  if (!isdigit(c) && c != '.') { return c; }
-  i = 0;
-  if (isdigit(c)) {
-    while (isdigit(s[++i] = c = getch())) {}
-  }
-  if (c == '.') {
-    while (isdigit(s[++i] = c = getch())) {}
-  }
-  s[i] = '\0';
-  if (c != EOF) { ungetch(c); }
-  return NUMBER;
-}
-
-
-int main(void) {
-  reverse_polish_calculator();
 }
